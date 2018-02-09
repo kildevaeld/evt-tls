@@ -11,6 +11,7 @@ if(EVT_TLS_BORING)
     message(STATUS "Using local boringssl")
     include(cmake/boringssl.cmake)
 else()
+
     find_package(OpenSSL QUIET)
     
     if (NOT OPENSSL_FOUND)
