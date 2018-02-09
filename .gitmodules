@@ -1,0 +1,3 @@
+[submodule "vendor/boringssl"]
+	path = vendor/boringssl
+	url = git@github.com:google/boringssl.git

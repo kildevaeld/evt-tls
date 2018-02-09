@@ -33,3 +33,5 @@
 
 #crtf and key
 *.pem
+build/
+.DS_Store
