@@ -1,21 +1,35 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 project(evt_tls)
 
 option(EVT_TLS_SAMPLE "build sample" off)
+option(EVT_TLS_BORING "use local boringssl" off)
+
 
 ## Find openssl
-find_library(openssl QUIET)
-
-if(NOT OPENSSL_FOUND)
+#find_library(openssl QUIET)
+if(EVT_TLS_BORING)
     message(STATUS "Using local boringssl")
-    add_subdirectory(vendor/boringssl)
-    set(OPENSSL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/vendor/boringssl/include)
-    set(OPENSSL_CRYPTO_LIBRARY ${PROJECT_BINARY_DIR}/vendor/boringssl/crypto/libcrypto.a)
-    set(OPENSSL_SSL_LIBRARY ${PROJECT_BINARY_DIR}/vendor/boringssl/ssl/libssl.a)
-    set(OPENSSL_LIBRARIES ${OPENSSL_CRYPTO_LIBRARY} ${OPENSSL_SSL_LIBRARY} z)
-endif(NOT OPENSSL_FOUND)
+    include(cmake/boringssl.cmake)
+else()
+    find_package(OpenSSL QUIET)
+    
+    if (NOT OPENSSL_FOUND)
+        find_package(PkgConfig)
+        pkg_check_modules(OPENSSL QUIET openssl)
+        if (APPLE AND OPENSSL_FOUND)
+            include_directories(/usr/local/opt/openssl/include)
+            link_directories(/usr/local/opt/openssl/lib)
+        endif(APPLE AND OPENSSL_FOUND)
+    endif(NOT OPENSSL_FOUND)
 
-include_directories(${OPENSSL_INCLUDE_DIR})
+    if(NOT OPENSSL_FOUND)
+        include(cmake/boringssl.cmake)
+    endif(NOT OPENSSL_FOUND)
+
+    endif(EVT_TLS_BORING)
+
+
+include_directories(${OPENSSL_INCLUDE_DIRS})
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 

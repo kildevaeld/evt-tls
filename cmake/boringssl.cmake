@@ -1,0 +1,5 @@
+add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/boringssl)
+set(OPENSSL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/vendor/boringssl/include)
+set(OPENSSL_CRYPTO_LIBRARY ${PROJECT_BINARY_DIR}/vendor/boringssl/crypto/libcrypto.a)
+set(OPENSSL_SSL_LIBRARY ${PROJECT_BINARY_DIR}/vendor/boringssl/ssl/libssl.a)
+set(OPENSSL_LIBRARIES ${OPENSSL_CRYPTO_LIBRARY} ${OPENSSL_SSL_LIBRARY} z)
